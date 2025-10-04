@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yolo247/core/assets/assets.gen.dart';
-import 'package:yolo247/core/constants/app_constants.dart';
-import 'package:yolo247/core/cubit/theme_cubit.dart';
 import 'package:yolo247/core/theme/app_colors.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -11,106 +8,91 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeMode>(
-      builder: (context, themeMode) {
-        final isDark = themeMode == ThemeMode.dark;
-        return Scaffold(
-          backgroundColor: isDark
-              ? AppColors.darkBackground
-              : AppColors.background,
-          body: SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  // Header
-                  _buildHeader(context, isDark),
+    return Scaffold(
+      backgroundColor: AppColors.darkBackground,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Header
+              _buildHeader(context),
 
-                  20.verticalSpace,
+              20.verticalSpace,
 
-                  // Hero Section
-                  _buildHeroSection(context, isDark),
+              // Hero Section
+              _buildHeroSection(context),
 
-                  20.verticalSpace,
+              20.verticalSpace,
 
-                  // Menu Grid
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: Column(
+              // Menu Grid
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Column(
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildMenuCard(
-                                context: context,
-                                title: AppTexts.newMatch,
-                                icon: '🏏',
-                                isDark: isDark,
-                                onTap: () =>
-                                    Navigator.pushNamed(context, '/new-match'),
-                              ),
-                            ),
-                            SizedBox(width: 16.w),
-                            Expanded(
-                              child: _buildMenuCard(
-                                context: context,
-                                title: AppTexts.matchHistory,
-                                icon: '📋',
-                                isDark: isDark,
-                                onTap: () => Navigator.pushNamed(
-                                  context,
-                                  '/match-history',
-                                ),
-                              ),
-                            ),
-                          ],
+                        Expanded(
+                          child: _buildMenuCard(
+                            context: context,
+                            title: "New Match",
+                            icon: '🏏',
+                            onTap: () =>
+                                Navigator.pushNamed(context, '/new-match'),
+                          ),
                         ),
-                        SizedBox(height: 16.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildMenuCard(
-                                context: context,
-                                title: AppTexts.teams,
-                                icon: '👥',
-                                isDark: isDark,
-                                onTap: () => Navigator.pushNamed(
-                                  context,
-                                  '/team-management',
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 16.w),
-                            Expanded(
-                              child: _buildMenuCard(
-                                context: context,
-                                title: AppTexts.playerStats,
-                                icon: '📊',
-                                isDark: isDark,
-                                onTap: () => Navigator.pushNamed(
-                                  context,
-                                  '/player-stats',
-                                ),
-                              ),
-                            ),
-                          ],
+                        SizedBox(width: 16.w),
+                        Expanded(
+                          child: _buildMenuCard(
+                            context: context,
+                            title: "Match History",
+                            icon: '📋',
+                            onTap: () =>
+                                Navigator.pushNamed(context, '/match-history'),
+                          ),
                         ),
-                        16.verticalSpace,
-                        _buildMatchSummaryCard(context, isDark),
                       ],
                     ),
-                  ),
-
-                  20.verticalSpace,
-                ],
+                    SizedBox(height: 16.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildMenuCard(
+                            context: context,
+                            title: "Teams",
+                            icon: '👥',
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              '/team-management',
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 16.w),
+                        Expanded(
+                          child: _buildMenuCard(
+                            context: context,
+                            title: "Player Stats",
+                            icon: '📊',
+                            onTap: () =>
+                                Navigator.pushNamed(context, '/player-stats'),
+                          ),
+                        ),
+                      ],
+                    ),
+                    16.verticalSpace,
+                    _buildMatchSummaryCard(context),
+                  ],
+                ),
               ),
-            ),
+
+              20.verticalSpace,
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
-  Widget _buildHeader(BuildContext context, bool isDark) {
+  Widget _buildHeader(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
       child: Row(
@@ -126,9 +108,7 @@ class HomeScreen extends StatelessWidget {
                     TextSpan(
                       text: 'Cricket ',
                       style: TextStyle(
-                        color: isDark
-                            ? AppColors.darkTextPrimary
-                            : AppColors.textPrimary,
+                        color: AppColors.darkTextPrimary,
                         fontSize: 32.sp,
                         fontWeight: FontWeight.bold,
                       ),
@@ -166,11 +146,9 @@ class HomeScreen extends StatelessWidget {
               border: Border.all(color: AppColors.primaryLight, width: 2.5),
             ),
             child: IconButton(
-              onPressed: () {
-                context.read<ThemeCubit>().toggleTheme();
-              },
+              onPressed: () {},
               icon: Icon(
-                isDark ? Icons.light_mode : Icons.dark_mode,
+                Icons.light_mode,
                 size: 28.w,
                 color: AppColors.primaryLight,
               ),
@@ -182,12 +160,12 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeroSection(BuildContext context, bool isDark) {
+  Widget _buildHeroSection(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.w),
       height: 280.h,
       decoration: BoxDecoration(
-        gradient: isDark ? AppColors.darkGradient : AppColors.mainGradient,
+        gradient: AppColors.darkGradient,
         borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
@@ -288,7 +266,6 @@ class HomeScreen extends StatelessWidget {
     required BuildContext context,
     required String title,
     required String icon,
-    required bool isDark,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
@@ -296,12 +273,9 @@ class HomeScreen extends StatelessWidget {
       child: Container(
         height: 140.h,
         decoration: BoxDecoration(
-          color: isDark ? AppColors.darkSurface : AppColors.surface,
+          color: AppColors.darkSurface,
           borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(
-            color: isDark ? AppColors.darkBorder : AppColors.border,
-            width: 1.5,
-          ),
+          border: Border.all(color: AppColors.darkBorder, width: 1.5),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -311,9 +285,7 @@ class HomeScreen extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                color: isDark
-                    ? AppColors.darkTextPrimary
-                    : AppColors.textPrimary,
+                color: AppColors.darkTextPrimary,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
               ),
@@ -325,7 +297,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMatchSummaryCard(BuildContext context, bool isDark) {
+  Widget _buildMatchSummaryCard(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, '/match-summary');
@@ -334,12 +306,9 @@ class HomeScreen extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.darkSurface : AppColors.surface,
+          color: AppColors.darkSurface,
           borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(
-            color: isDark ? AppColors.darkBorder : AppColors.border,
-            width: 1.5,
-          ),
+          border: Border.all(color: AppColors.darkBorder, width: 1.5),
         ),
         child: Row(
           children: [
@@ -348,9 +317,7 @@ class HomeScreen extends StatelessWidget {
             Text(
               'Match Summary',
               style: TextStyle(
-                color: isDark
-                    ? AppColors.darkTextPrimary
-                    : AppColors.textPrimary,
+                color: AppColors.darkTextPrimary,
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w600,
               ),

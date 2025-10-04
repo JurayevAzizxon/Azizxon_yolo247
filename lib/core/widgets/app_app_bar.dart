@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yolo247/core/constants/app_constants.dart';
 import 'package:yolo247/core/routes/app_routes.dart';
 
 import '../theme/app_colors.dart';
@@ -64,14 +63,14 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
                       _buildMenuItem(
                         context,
                         icon: Icons.edit,
-                        label: AppTexts.newMatch,
+                        label: "New Match",
                         iconColor: AppColors.error,
                         route: Routes.newMatch,
                       ),
                       _buildMenuItem(
                         context,
                         icon: Icons.history,
-                        label: AppTexts.matchHistory,
+                        label: "Match History",
                         iconColor: AppColors.warning,
                         isSelected: true,
                         route: Routes.matchHistory,
@@ -79,21 +78,21 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
                       _buildMenuItem(
                         context,
                         icon: Icons.group,
-                        label: AppTexts.teams,
+                        label: "Teams",
                         iconColor: Colors.orange,
                         route: Routes.teamManagement,
                       ),
                       _buildMenuItem(
                         context,
                         icon: Icons.bar_chart,
-                        label: AppTexts.playerStats,
+                        label: "Player Stats",
                         iconColor: AppColors.primary,
                         route: Routes.playerStats,
                       ),
                       _buildMenuItem(
                         context,
                         icon: Icons.assignment,
-                        label: AppTexts.matchSummary,
+                        label: "Match Summary",
                         iconColor: AppColors.warning,
                         route: Routes.matchSummary,
                       ),

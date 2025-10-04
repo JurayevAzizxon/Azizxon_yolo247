@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:yolo247/core/theme/app_colors.dart';
 
 class AppFonts {
   // Font Family
@@ -9,22 +12,22 @@ class AppFonts {
   static const String afacadFont = 'Afacad';
 
   // Font Sizes
-  static const double fontSize8 = 8.0;
-  static const double fontSize10 = 10.0;
-  static const double fontSize12 = 12.0;
-  static const double fontSize14 = 14.0;
-  static const double fontSize16 = 16.0;
-  static const double fontSize18 = 18.0;
-  static const double fontSize20 = 20.0;
-  static const double fontSize22 = 22.0;
-  static const double fontSize24 = 24.0;
-  static const double fontSize28 = 28.0;
-  static const double fontSize32 = 32.0;
-  static const double fontSize36 = 36.0;
-  static const double fontSize40 = 40.0;
-  static const double fontSize48 = 48.0;
-  static const double fontSize56 = 56.0;
-  static const double fontSize64 = 64.0;
+  static double fontSize8 = 8.sp;
+  static double fontSize10 = 10.sp;
+  static double fontSize12 = 12.sp;
+  static double fontSize14 = 14.sp;
+  static double fontSize16 = 16.sp;
+  static double fontSize18 = 18.sp;
+  static double fontSize20 = 20.sp;
+  static double fontSize22 = 22.sp;
+  static double fontSize24 = 24.sp;
+  static double fontSize28 = 28.sp;
+  static double fontSize32 = 32.sp;
+  static double fontSize36 = 36.sp;
+  static double fontSize40 = 40.sp;
+  static double fontSize48 = 48.sp;
+  static double fontSize56 = 56.sp;
+  static double fontSize64 = 64.sp;
 
   // Font Weights
   static const FontWeight light = FontWeight.w300;
@@ -35,137 +38,167 @@ class AppFonts {
   static const FontWeight extraBold = FontWeight.w800;
   static const FontWeight black = FontWeight.w900;
 
-  // Text Styles
-  static const TextStyle headline1 = TextStyle(
+  /// Bular o'chirishi kerak
+  static TextStyle headline1 = TextStyle(
     fontSize: fontSize48,
     fontWeight: bold,
     fontFamily: primaryFont,
   );
 
-  static const TextStyle headline2 = TextStyle(
+  static TextStyle headline2 = TextStyle(
     fontSize: fontSize40,
     fontWeight: bold,
     fontFamily: primaryFont,
   );
 
-  static const TextStyle headline3 = TextStyle(
+  static TextStyle headline3 = TextStyle(
     fontSize: fontSize32,
     fontWeight: semiBold,
     fontFamily: primaryFont,
   );
 
-  static const TextStyle headline4 = TextStyle(
+  static TextStyle headline4 = TextStyle(
     fontSize: fontSize28,
     fontWeight: semiBold,
     fontFamily: primaryFont,
   );
 
-  static const TextStyle headline5 = TextStyle(
+  static TextStyle headline5 = TextStyle(
     fontSize: fontSize24,
     fontWeight: medium,
     fontFamily: primaryFont,
   );
 
-  static const TextStyle headline6 = TextStyle(
+  static TextStyle headline6 = TextStyle(
     fontSize: fontSize20,
     fontWeight: medium,
     fontFamily: primaryFont,
   );
 
-  static const TextStyle subtitle1 = TextStyle(
+  static TextStyle subtitle1 = TextStyle(
     fontSize: fontSize16,
     fontWeight: medium,
     fontFamily: primaryFont,
   );
 
-  static const TextStyle subtitle2 = TextStyle(
+  static TextStyle subtitle2 = TextStyle(
     fontSize: fontSize14,
     fontWeight: medium,
     fontFamily: primaryFont,
   );
 
-  static const TextStyle bodyText1 = TextStyle(
+  static TextStyle bodyText1 = TextStyle(
     fontSize: fontSize16,
     fontWeight: regular,
     fontFamily: primaryFont,
   );
 
-  static const TextStyle bodyText2 = TextStyle(
+  static TextStyle bodyText2 = TextStyle(
     fontSize: fontSize14,
     fontWeight: regular,
     fontFamily: primaryFont,
   );
 
-  static const TextStyle caption = TextStyle(
+  static TextStyle caption = TextStyle(
     fontSize: fontSize12,
     fontWeight: regular,
     fontFamily: primaryFont,
   );
 
-  static const TextStyle overline = TextStyle(
+  static TextStyle overline = TextStyle(
     fontSize: fontSize10,
     fontWeight: medium,
     fontFamily: primaryFont,
   );
 
-  static const TextStyle button = TextStyle(
+  static TextStyle button = TextStyle(
     fontSize: fontSize16,
     fontWeight: medium,
     fontFamily: primaryFont,
   );
 
-  // Cricket Specific Text Styles
-  static const TextStyle scoreDisplay = TextStyle(
-    fontSize: fontSize56,
-    fontWeight: bold,
-    fontFamily: primaryFont,
-  );
-
-  static const TextStyle playerName = TextStyle(
-    fontSize: fontSize18,
-    fontWeight: semiBold,
-    fontFamily: primaryFont,
-  );
-
-  static const TextStyle statsLabel = TextStyle(
-    fontSize: fontSize14,
-    fontWeight: medium,
-    fontFamily: primaryFont,
-  );
-
-  static const TextStyle statsValue = TextStyle(
-    fontSize: fontSize16,
-    fontWeight: bold,
-    fontFamily: primaryFont,
-  );
-
-  static const TextStyle teamName = TextStyle(
-    fontSize: fontSize24,
-    fontWeight: bold,
-    fontFamily: primaryFont,
-  );
-
-  static const TextStyle matchInfo = TextStyle(
-    fontSize: fontSize14,
-    fontWeight: regular,
-    fontFamily: primaryFont,
-  );
-
-  static const TextStyle size20weight500fontInter = TextStyle(
+  static TextStyle size20weight500fontInter = TextStyle(
     fontSize: 20,
     fontWeight: medium,
     fontFamily: interFont,
   );
 
-  static const TextStyle size42weight300fontKaushanScript = TextStyle(
+  static TextStyle size42weight300fontKaushanScript = TextStyle(
     fontSize: 42,
     fontWeight: regular,
     fontFamily: kaushanScriptFont,
   );
 
-  static const TextStyle size42weight600fontAfacad = TextStyle(
+  static TextStyle size42weight600fontAfacad = TextStyle(
     fontSize: 42,
     fontWeight: semiBold,
     fontFamily: afacadFont,
+  );
+
+  /// Mana shu qismgacha o'chirish kerak
+
+  //// Google Fonts
+  static TextStyle inter = GoogleFonts.inter();
+  static TextStyle kaushanScript = GoogleFonts.kaushanScript();
+  static TextStyle afacad = GoogleFonts.afacad();
+
+  static TextStyle bold12Inter = GoogleFonts.inter(
+    fontSize: fontSize12,
+    fontWeight: bold,
+    color: AppColors.textWhite,
+  );
+
+  static TextStyle bold14Inter = GoogleFonts.inter(
+    fontSize: fontSize14,
+    fontWeight: bold,
+    color: AppColors.textWhite,
+  );
+
+  static TextStyle bold16Inter = GoogleFonts.inter(
+    fontSize: fontSize16,
+    fontWeight: bold,
+    color: AppColors.textWhite,
+  );
+
+  static TextStyle bold18Inter = GoogleFonts.inter(
+    fontSize: fontSize18,
+    fontWeight: bold,
+    color: AppColors.textWhite,
+  );
+
+  static TextStyle bold20Inter = GoogleFonts.inter(
+    fontSize: fontSize20,
+    fontWeight: bold,
+    color: AppColors.textWhite,
+  );
+
+  static TextStyle bold22Inter = GoogleFonts.inter(
+    fontSize: fontSize22,
+    fontWeight: bold,
+    color: AppColors.textWhite,
+  );
+
+  static TextStyle bold24Inter = GoogleFonts.inter(
+    fontSize: fontSize24,
+    fontWeight: bold,
+    color: AppColors.textWhite,
+  );
+
+  static TextStyle bold28Inter = GoogleFonts.inter(
+    fontSize: fontSize28,
+    fontWeight: bold,
+    color: AppColors.textWhite,
+  );
+
+  static TextStyle bold32Inter = GoogleFonts.inter(
+    fontSize: fontSize32,
+    fontWeight: bold,
+    color: AppColors.textWhite,
+  );
+
+  static TextStyle bold36Inter = GoogleFonts.inter(
+    fontSize: fontSize36,
+    fontWeight: bold,
+    color: AppColors.textWhite,
   );
 }

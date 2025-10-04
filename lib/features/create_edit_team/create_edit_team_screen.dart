@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/constants/app_constants.dart';
-import '../../core/cubit/theme_cubit.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_fonts.dart';
 import '../../core/widgets/app_app_bar.dart';
@@ -20,56 +18,123 @@ class CreateEditTeamScreen extends StatefulWidget {
 class _CreateEditTeamScreenState extends State<CreateEditTeamScreen> {
   final TextEditingController _teamNameController = TextEditingController();
   final TextEditingController _playerNameController = TextEditingController();
-  final List<String> _players = [];
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.teamId != null) {
-      // TODO: Load team data for editing
-    }
-  }
-
-  @override
-  void dispose() {
-    _teamNameController.dispose();
-    _playerNameController.dispose();
-    super.dispose();
-  }
+  final List<String> _players = ['Rohit Sharma', 'Virat Kohli', 'KL Rahul'];
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeMode>(
-      builder: (context, themeMode) {
-        final isDark = themeMode == ThemeMode.dark;
-        return Scaffold(
-          backgroundColor: isDark
-              ? AppColors.darkBackground
-              : AppColors.background,
-          appBar: AppAppBar(
-            title: widget.teamId == null ? 'Create Team' : 'Edit Team',
-          ),
-          body: Container(
-            decoration: BoxDecoration(
-              gradient: isDark
-                  ? AppColors.darkGradient
-                  : AppColors.fieldGradient,
-            ),
-            child: SafeArea(
-              child: Padding(
-                padding: AppConstants.defaultPadding,
-                child: Column(
-                  children: [
-                    _buildTeamNameField(isDark),
-                    SizedBox(height: AppConstants.largeSpacing),
-                    Expanded(child: _buildPlayersList()),
-                    SizedBox(height: AppConstants.largeSpacing),
-                    _buildAddPlayerButton(),
-                    SizedBox(height: AppConstants.largeSpacing),
-                    _buildSaveButton(),
-                  ],
+    return Scaffold(
+      backgroundColor: Color(0xFF080209),
+      appBar: AppAppBar(
+        title: widget.teamId == null ? 'Create/Edit Team' : 'Edit Teams',
+      ),
+      body: Container(
+        decoration: BoxDecoration(gradient: AppColors.darkGradient),
+        child: SafeArea(
+          child: Padding(
+            padding: AppConstants.defaultPadding,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTeamNameField(),
+                SizedBox(height: 55.h),
+                Text(
+                  'Players:',
+                  style: AppFonts.subtitle1.copyWith(
+                    color: AppColors.darkTextPrimary,
+                    fontWeight: AppFonts.bold,
+                  ),
                 ),
-              ),
+                SizedBox(height: 10.h),
+                Expanded(child: _buildPlayersList()),
+                SizedBox(height: 16.h),
+                _buildAddPlayerField(),
+                SizedBox(height: 90.h),
+                _buildSaveButton(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTeamNameField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Team Name",
+          style: AppFonts.subtitle1.copyWith(
+            color: AppColors.darkTextPrimary,
+            fontWeight: AppFonts.semiBold,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.darkSurface.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          child: TextField(
+            controller: _teamNameController,
+            style: TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
+            decoration: InputDecoration(
+              hintText: 'Team Name',
+              hintStyle: TextStyle(color: AppColors.darkTextSecondary,fontWeight: FontWeight.bold),
+              border: InputBorder.none,
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 15.w, vertical: 16.h),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPlayersList() {
+    return ListView.builder(
+      itemCount: _players.length,
+      itemBuilder: (context, index) {
+        return Container(
+          margin: EdgeInsets.only(bottom: 12.h),
+          decoration: BoxDecoration(
+            color: AppColors.darkSurface.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(10.r),
+            // border: Border.all(
+            //   // color: index == 0 ? Colors.blueAccent : Colors.transparent,
+            //   width: 1.5,
+            // ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _players[index],
+                  style: AppFonts.bodyText1.copyWith(
+                    color: AppColors.textWhite,
+                    fontWeight: AppFonts.bold,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _players.removeAt(index);
+                    });
+                  },
+                  child: Container(
+                    width: 26.w,
+                    height: 26.w,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.redAccent, width: 2),
+                    ),
+                    child: const Icon(Icons.close,
+                        size: 16, color: Colors.redAccent),
+                  ),
+                )
+              ],
             ),
           ),
         );
@@ -77,212 +142,149 @@ class _CreateEditTeamScreenState extends State<CreateEditTeamScreen> {
     );
   }
 
-  Widget _buildTeamNameField(bool isDark) {
-    return Container(
-      padding: AppConstants.defaultPadding,
-      decoration: BoxDecoration(
-        color: isDark
-            ? AppColors.darkSurface.withOpacity(0.9)
-            : AppColors.surface.withOpacity(0.9),
-        borderRadius: AppConstants.largeBorderRadius,
-        boxShadow: [
-          BoxShadow(
-            color: isDark ? AppColors.shadowDark : AppColors.shadow,
-            blurRadius: 10.r,
-            offset: Offset(0, 5.h),
-          ),
-        ],
+  Widget _buildAddPlayerField() {
+  return SizedBox(
+    width: double.infinity,
+    height: 55.h,
+    child: OutlinedButton(
+      onPressed: () {
+        _showAddPlayerDialog();
+      },
+      style: OutlinedButton.styleFrom(
+        side: const BorderSide(color: Color(0xFF6272DB), width: 1.5),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.black,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            AppTexts.teamName,
-            style: AppFonts.subtitle1.copyWith(
-              color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
-              fontWeight: AppFonts.semiBold,
-            ),
-          ),
-          SizedBox(height: AppConstants.smallSpacing),
-          TextFormField(
-            controller: _teamNameController,
-            style: TextStyle(
-              color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
-            ),
-            decoration: InputDecoration(
-              hintText: 'Enter team name',
-              hintStyle: TextStyle(
-                color: isDark
-                    ? AppColors.darkTextSecondary
-                    : AppColors.textSecondary,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPlayersList() {
-    return Container(
-      width: double.infinity,
-      padding: AppConstants.defaultPadding,
-      decoration: BoxDecoration(
-        color: AppColors.surface.withOpacity(0.9),
-        borderRadius: AppConstants.largeBorderRadius,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadow,
-            blurRadius: 10.r,
-            offset: Offset(0, 5.h),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Players',
-            style: AppFonts.subtitle1.copyWith(
-              color: AppColors.textPrimary,
-              fontWeight: AppFonts.semiBold,
-            ),
-          ),
-          SizedBox(height: AppConstants.mediumSpacing),
-          Expanded(
-            child: _players.isEmpty
-                ? Center(
-                    child: Text(
-                      'No players added yet',
-                      style: AppFonts.bodyText2.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: _players.length,
-                    itemBuilder: (context, index) {
-                      final player = _players[index];
-                      return _buildPlayerItem(player, index);
-                    },
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPlayerItem(String playerName, int index) {
-    return Container(
-      margin: EdgeInsets.only(bottom: AppConstants.smallSpacing),
-      padding: AppConstants.smallPadding,
-      decoration: BoxDecoration(
-        color: AppColors.accent,
-        borderRadius: AppConstants.smallBorderRadius,
-      ),
-      child: Row(
-        children: [
-          Text(
-            '${index + 1}.',
-            style: AppFonts.bodyText2.copyWith(color: AppColors.textPrimary),
-          ),
-          SizedBox(width: AppConstants.smallSpacing),
-          Expanded(
-            child: Text(
-              playerName,
-              style: AppFonts.bodyText2.copyWith(color: AppColors.textPrimary),
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _players.removeAt(index);
-              });
-            },
-            icon: Icon(Icons.delete, color: AppColors.error, size: 20.w),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAddPlayerButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton.icon(
-        onPressed: _showAddPlayerDialog,
-        icon: const Icon(Icons.add),
-        label: Text(AppTexts.addPlayer),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.primary,
-          side: BorderSide(color: AppColors.primary),
-          shape: RoundedRectangleBorder(
-            borderRadius: AppConstants.largeBorderRadius,
-          ),
+      child: Text(
+        '+ Add Player',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16.sp,
+          fontWeight: FontWeight.w500,
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+void _showAddPlayerDialog() {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: const Color(0xff0C1A4B),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        title: Text(
+          'Add Player',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20.sp,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _playerNameController,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintText: 'Enter player name',
+                hintStyle: const TextStyle(color: Colors.white54),
+                filled: true,
+                fillColor: const Color(0xff1A275F),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            SizedBox(height: 20.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_playerNameController.text.isNotEmpty) {
+                        setState(() {
+                          _players.add(_playerNameController.text.trim());
+                        });
+                        _playerNameController.clear();
+                        Navigator.pop(context);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF6272DB),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                    ),
+                    child: const Text(
+                      'Add',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10.w),
+               Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.redAccent),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                    ),
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.redAccent),
+                    ),
+                  ),
+                ), 
+              ],
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
 
   Widget _buildSaveButton() {
     return SizedBox(
       width: double.infinity,
       height: 56.h,
       child: ElevatedButton(
-        onPressed: _saveTeam,
+        onPressed: () {
+          if (_teamNameController.text.isNotEmpty && _players.isNotEmpty) {
+            // TODO: Save logic
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Team saved successfully!')),
+            );
+          }
+        },
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.textWhite,
-          shape: RoundedRectangleBorder(
-            borderRadius: AppConstants.largeBorderRadius,
-          ),
+          backgroundColor: Color(0xff3B4AA2),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
         ),
         child: Text(
-          AppTexts.save,
+          'Save',
           style: AppFonts.button.copyWith(
-            fontSize: AppFonts.fontSize18,
+            color: AppColors.textWhite,
             fontWeight: AppFonts.semiBold,
+            fontSize: AppFonts.fontSize18,
           ),
         ),
       ),
     );
-  }
-
-  void _showAddPlayerDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Add Player'),
-        content: TextField(
-          controller: _playerNameController,
-          decoration: InputDecoration(hintText: 'Enter player name'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (_playerNameController.text.isNotEmpty) {
-                setState(() {
-                  _players.add(_playerNameController.text);
-                  _playerNameController.clear();
-                });
-                Navigator.pop(context);
-              }
-            },
-            child: Text('Add'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _saveTeam() {
-    if (_teamNameController.text.isNotEmpty && _players.isNotEmpty) {
-      // TODO: Save team
-      Navigator.pop(context);
-    }
   }
 }

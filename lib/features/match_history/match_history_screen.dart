@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yolo247/core/cubit/theme_cubit.dart';
 
 import '../../core/bloc/app_state.dart';
 import '../../core/constants/app_constants.dart';
@@ -16,62 +15,53 @@ class MatchHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeMode>(
-      builder: (context, themeMode) {
-        final isDark = themeMode == ThemeMode.dark;
-        return Scaffold(
-          backgroundColor: isDark
-              ? AppColors.darkBackground
-              : AppColors.background,
-          appBar: AppAppBar(title: AppTexts.matchHistory),
-          body: BlocConsumer<AppCubit, AppState>(
-            listener: (context, state) {
-              if (state.errorMessage != null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.errorMessage!),
-                    backgroundColor: AppColors.error,
-                  ),
-                );
-                context.read<AppCubit>().clearError();
-              }
-            },
-            builder: (context, state) {
-              return SafeArea(
-                child: Padding(
-                  padding: AppConstants.defaultPadding,
-                  child: Column(
-                    children: [
-                      // Header
-                      _buildHeader(isDark),
+    return Scaffold(
+      backgroundColor: AppColors.darkBackground,
+      appBar: AppAppBar(title: "Match History"),
+      body: BlocConsumer<AppCubit, AppState>(
+        listener: (context, state) {
+          if (state.errorMessage != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorMessage!),
+                backgroundColor: AppColors.error,
+              ),
+            );
+            context.read<AppCubit>().clearError();
+          }
+        },
+        builder: (context, state) {
+          return SafeArea(
+            child: Padding(
+              padding: AppConstants.defaultPadding,
+              child: Column(
+                children: [
+                  // Header
+                  _buildHeader(),
 
-                      SizedBox(height: AppConstants.largeSpacing),
+                  SizedBox(height: AppConstants.largeSpacing),
 
-                      // Match List
-                      Expanded(
-                        child: _buildMatchList(state.matches, context, isDark),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        );
-      },
+                  // Match List
+                  Expanded(child: _buildMatchList(state.matches, context)),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
-  Widget _buildHeader(bool isDark) {
+  Widget _buildHeader() {
     return Container(
       width: double.infinity,
       padding: AppConstants.defaultPadding,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.surface,
+        color: AppColors.darkSurface,
         borderRadius: AppConstants.largeBorderRadius,
         boxShadow: [
           BoxShadow(
-            color: isDark ? AppColors.darkShadow : AppColors.shadow,
+            color: AppColors.darkShadow,
             blurRadius: 10.r,
             offset: Offset(0, 5.h),
           ),
@@ -82,9 +72,9 @@ class MatchHistoryScreen extends StatelessWidget {
           Icon(Icons.history, size: 48.w, color: AppColors.primary),
           SizedBox(height: AppConstants.mediumSpacing),
           Text(
-            AppTexts.matchHistory,
+            "Match History",
             style: AppFonts.headline5.copyWith(
-              color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
+              color: AppColors.darkTextPrimary,
               fontWeight: AppFonts.bold,
             ),
           ),
@@ -98,11 +88,7 @@ class MatchHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMatchList(
-    List<Match> matches,
-    BuildContext context,
-    bool isDark,
-  ) {
+  Widget _buildMatchList(List<Match> matches, BuildContext context) {
     if (matches.isEmpty) {
       return _buildEmptyState(context);
     }
@@ -111,7 +97,7 @@ class MatchHistoryScreen extends StatelessWidget {
       itemCount: matches.length,
       itemBuilder: (context, index) {
         final match = matches[index];
-        return _buildMatchCard(match, context, isDark);
+        return _buildMatchCard(match, context);
       },
     );
   }
@@ -153,14 +139,14 @@ class MatchHistoryScreen extends StatelessWidget {
           SizedBox(height: AppConstants.largeSpacing),
           ElevatedButton(
             onPressed: () => Navigator.pushNamed(context, '/new-match'),
-            child: Text(AppTexts.newMatch),
+            child: Text("New Match"),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildMatchCard(Match match, BuildContext context, bool isDark) {
+  Widget _buildMatchCard(Match match, BuildContext context) {
     final appCubit = context.read<AppCubit>();
     final battingTeamName = appCubit.getTeamName(match.battingTeamId);
     final bowlingTeamName = appCubit.getTeamName(match.bowlingTeamId);
@@ -171,7 +157,7 @@ class MatchHistoryScreen extends StatelessWidget {
       margin: EdgeInsets.only(bottom: AppConstants.mediumSpacing),
       padding: AppConstants.defaultPadding,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.surface,
+        color: AppColors.darkSurface,
         borderRadius: AppConstants.largeBorderRadius,
         boxShadow: [
           BoxShadow(
@@ -192,9 +178,7 @@ class MatchHistoryScreen extends StatelessWidget {
                 child: Text(
                   '$battingTeamName vs $bowlingTeamName',
                   style: AppFonts.subtitle1.copyWith(
-                    color: isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.textPrimary,
+                    color: AppColors.darkTextPrimary,
                     fontWeight: AppFonts.semiBold,
                   ),
                 ),
@@ -289,9 +273,7 @@ class MatchHistoryScreen extends StatelessWidget {
             child: Text(
               matchResult,
               style: AppFonts.bodyText2.copyWith(
-                color: isDark
-                    ? AppColors.darkTextPrimary
-                    : AppColors.textPrimary,
+                color: AppColors.darkTextPrimary,
                 fontWeight: AppFonts.semiBold,
               ),
               textAlign: TextAlign.center,

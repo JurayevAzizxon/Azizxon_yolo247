@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/bloc/app_state.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/cubit/app_cubit.dart';
-import '../../core/cubit/theme_cubit.dart';
 import '../../core/models/match.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_fonts.dart';
@@ -32,86 +31,75 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeMode>(
-      builder: (context, themeMode) {
-        final isDark = themeMode == ThemeMode.dark;
-        return Scaffold(
-          backgroundColor: isDark
-              ? AppColors.darkBackground
-              : AppColors.background,
-          appBar: AppAppBar(
-            title: 'Live Scoring',
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.undo),
-                onPressed: () {
-                  context.read<AppCubit>().undoLastBallEvent();
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.check),
-                onPressed: () {
-                  _completeMatch(context);
-                },
-              ),
-            ],
-          ),
-          body: BlocConsumer<AppCubit, AppState>(
-            listener: (context, state) {
-              if (state.errorMessage != null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.errorMessage!),
-                    backgroundColor: AppColors.error,
-                  ),
-                );
-                context.read<AppCubit>().clearError();
-              }
-              if (state.successMessage != null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.successMessage!),
-                    backgroundColor: AppColors.success,
-                  ),
-                );
-                context.read<AppCubit>().clearSuccess();
-              }
+    return Scaffold(
+      backgroundColor: AppColors.darkBackground,
+      appBar: AppAppBar(
+        title: 'Live Scoring',
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.undo),
+            onPressed: () {
+              context.read<AppCubit>().undoLastBallEvent();
             },
-            builder: (context, state) {
-              final match = state.currentMatch;
-              if (match == null) {
-                return _buildNoMatchState(isDark);
-              }
+          ),
+          IconButton(
+            icon: const Icon(Icons.check),
+            onPressed: () {
+              _completeMatch(context);
+            },
+          ),
+        ],
+      ),
+      body: BlocConsumer<AppCubit, AppState>(
+        listener: (context, state) {
+          if (state.errorMessage != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorMessage!),
+                backgroundColor: AppColors.error,
+              ),
+            );
+            context.read<AppCubit>().clearError();
+          }
+          if (state.successMessage != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.successMessage!),
+                backgroundColor: AppColors.success,
+              ),
+            );
+            context.read<AppCubit>().clearSuccess();
+          }
+        },
+        builder: (context, state) {
+          final match = state.currentMatch;
+          if (match == null) {
+            return _buildNoMatchState();
+          }
 
-              return Container(
-                decoration: const BoxDecoration(
-                  gradient: AppColors.fieldGradient,
+          return Container(
+            decoration: const BoxDecoration(gradient: AppColors.fieldGradient),
+            child: SafeArea(
+              child: Padding(
+                padding: AppConstants.defaultPadding,
+                child: Column(
+                  children: [
+                    _buildMatchInfo(match, context),
+                    SizedBox(height: AppConstants.largeSpacing),
+                    _buildScoreDisplay(match),
+                    SizedBox(height: AppConstants.largeSpacing),
+                    Expanded(child: _buildScoringControls(match, context)),
+                  ],
                 ),
-                child: SafeArea(
-                  child: Padding(
-                    padding: AppConstants.defaultPadding,
-                    child: Column(
-                      children: [
-                        _buildMatchInfo(match, context, isDark),
-                        SizedBox(height: AppConstants.largeSpacing),
-                        _buildScoreDisplay(match, isDark),
-                        SizedBox(height: AppConstants.largeSpacing),
-                        Expanded(
-                          child: _buildScoringControls(match, context, isDark),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        );
-      },
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
-  Widget _buildNoMatchState(bool isDark) {
+  Widget _buildNoMatchState() {
     return Container(
       decoration: const BoxDecoration(gradient: AppColors.fieldGradient),
       child: SafeArea(
@@ -121,11 +109,11 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
             child: Container(
               padding: AppConstants.defaultPadding,
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkSurface : AppColors.surface,
+                color: AppColors.darkSurface,
                 borderRadius: AppConstants.largeBorderRadius,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.shadow,
+                    color: AppColors.darkShadow,
                     blurRadius: 10.r,
                     offset: Offset(0, 5.h),
                   ),
@@ -143,9 +131,7 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
                   Text(
                     'No active match',
                     style: AppFonts.headline6.copyWith(
-                      color: isDark
-                          ? AppColors.darkTextPrimary
-                          : AppColors.textPrimary,
+                      color: AppColors.darkTextPrimary,
                     ),
                   ),
                   SizedBox(height: AppConstants.mediumSpacing),
@@ -170,7 +156,7 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
     );
   }
 
-  Widget _buildMatchInfo(Match match, BuildContext context, bool isDark) {
+  Widget _buildMatchInfo(Match match, BuildContext context) {
     final appCubit = context.read<AppCubit>();
     final battingTeamName = appCubit.getTeamName(match.battingTeamId);
     final bowlingTeamName = appCubit.getTeamName(match.bowlingTeamId);
@@ -179,11 +165,11 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
       width: double.infinity,
       padding: AppConstants.defaultPadding,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.surface,
+        color: AppColors.darkSurface,
         borderRadius: AppConstants.largeBorderRadius,
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadow,
+            color: AppColors.darkShadow,
             blurRadius: 10.r,
             offset: Offset(0, 5.h),
           ),
@@ -194,7 +180,7 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
           Text(
             '$battingTeamName vs $bowlingTeamName',
             style: AppFonts.headline6.copyWith(
-              color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
+              color: AppColors.darkTextPrimary,
               fontWeight: AppFonts.bold,
             ),
             textAlign: TextAlign.center,
@@ -227,16 +213,16 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
     );
   }
 
-  Widget _buildScoreDisplay(Match match, bool isDark) {
+  Widget _buildScoreDisplay(Match match) {
     return Container(
       width: double.infinity,
       padding: AppConstants.defaultPadding,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.surface,
+        color: AppColors.darkSurface,
         borderRadius: AppConstants.largeBorderRadius,
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadow,
+            color: AppColors.darkShadow,
             blurRadius: 10.r,
             offset: Offset(0, 5.h),
           ),
@@ -247,7 +233,7 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
           Text(
             'Current Score',
             style: AppFonts.subtitle1.copyWith(
-              color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
+              color: AppColors.darkTextPrimary,
               fontWeight: AppFonts.semiBold,
             ),
           ),
@@ -318,16 +304,16 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
     );
   }
 
-  Widget _buildScoringControls(Match match, BuildContext context, bool isDark) {
+  Widget _buildScoringControls(Match match, BuildContext context) {
     return Container(
       width: double.infinity,
       padding: AppConstants.defaultPadding,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.surface,
+        color: AppColors.darkSurface,
         borderRadius: AppConstants.largeBorderRadius,
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadow,
+            color: AppColors.darkShadow,
             blurRadius: 10.r,
             offset: Offset(0, 5.h),
           ),
@@ -340,26 +326,23 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
             Text(
               'Score Runs',
               style: AppFonts.subtitle1.copyWith(
-                color: isDark
-                    ? AppColors.darkTextPrimary
-                    : AppColors.textPrimary,
+                color: AppColors.textPrimary,
                 fontWeight: AppFonts.semiBold,
               ),
             ),
             SizedBox(height: AppConstants.mediumSpacing),
-            _buildRunsGrid(isDark),
+            _buildRunsGrid(),
             SizedBox(height: AppConstants.largeSpacing),
             Text(
               'Special Events',
               style: AppFonts.subtitle1.copyWith(
-                color: isDark
-                    ? AppColors.darkTextPrimary
-                    : AppColors.textPrimary,
+                color: AppColors.darkTextPrimary,
+
                 fontWeight: AppFonts.semiBold,
               ),
             ),
             SizedBox(height: AppConstants.mediumSpacing),
-            _buildSpecialEventsGrid(isDark),
+            _buildSpecialEventsGrid(),
             SizedBox(height: AppConstants.largeSpacing),
             SizedBox(
               width: double.infinity,
@@ -390,7 +373,7 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
     );
   }
 
-  Widget _buildRunsGrid(bool isDark) {
+  Widget _buildRunsGrid() {
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -416,7 +399,7 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
             decoration: BoxDecoration(
               color: isSelected
                   ? AppColors.primary
-                  : (isDark ? AppColors.darkBackground : AppColors.background),
+                  : (AppColors.darkBackground),
               borderRadius: AppConstants.smallBorderRadius,
               border: Border.all(
                 color: isSelected ? AppColors.primary : AppColors.border,
@@ -427,11 +410,7 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
               child: Text(
                 runs == 0 ? 'Dot' : '$runs',
                 style: AppFonts.bodyText1.copyWith(
-                  color: isSelected
-                      ? Colors.white
-                      : (isDark
-                            ? AppColors.darkTextPrimary
-                            : AppColors.textPrimary),
+                  color: isSelected ? Colors.white : (AppColors.textPrimary),
                   fontWeight: AppFonts.semiBold,
                 ),
               ),
@@ -442,7 +421,7 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
     );
   }
 
-  Widget _buildSpecialEventsGrid(bool isDark) {
+  Widget _buildSpecialEventsGrid() {
     final events = [
       {'label': 'Wide', 'value': _isWide, 'color': AppColors.warning},
       {'label': 'No Ball', 'value': _isNoBall, 'color': AppColors.error},
@@ -512,9 +491,7 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
           },
           child: Container(
             decoration: BoxDecoration(
-              color: isSelected
-                  ? color
-                  : (isDark ? AppColors.darkBackground : AppColors.background),
+              color: isSelected ? color : (AppColors.darkBackground),
               borderRadius: AppConstants.smallBorderRadius,
               border: Border.all(
                 color: isSelected ? color : AppColors.border,
@@ -527,9 +504,7 @@ class _MatchScoringScreenState extends State<MatchScoringScreen> {
                 style: AppFonts.bodyText2.copyWith(
                   color: isSelected
                       ? Colors.white
-                      : (isDark
-                            ? AppColors.darkTextPrimary
-                            : AppColors.textPrimary),
+                      : (AppColors.darkTextPrimary),
                   fontWeight: AppFonts.semiBold,
                 ),
               ),
