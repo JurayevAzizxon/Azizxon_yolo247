@@ -45,8 +45,6 @@ dependencies:
   # Charts for run rate visualization
   fl_chart: ^0.68.0
   
-  # Animations
-  flutter_animate: ^4.5.0
   
   # Shared preferences for data persistence
   shared_preferences: ^2.2.2
